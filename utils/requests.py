@@ -33,7 +33,7 @@ class RequestsTool:
             is_json: bool = False,
             *args, **kwargs
     ) -> Tuple[bool, Union[dict, str]]:
-        """发送网络请求
+        """异步发送网络请求
 
         Args:
             method (str): 请求方法

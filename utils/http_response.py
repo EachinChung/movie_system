@@ -1,6 +1,7 @@
 from typing import Union
 
 from django.http import JsonResponse
+from django.views.decorators.http import require_http_methods
 
 
 def json_response(code: str = "0000", message: str = 'ok', data: Union[dict, list] = None) -> JsonResponse:
@@ -17,3 +18,11 @@ def json_response(code: str = "0000", message: str = 'ok', data: Union[dict, lis
     if data is None:
         data = {}
     return JsonResponse({'code': code, 'message': message, 'data': data})
+
+
+# 限制请求方法
+require_get = require_http_methods(("GET",))
+require_post = require_http_methods(("POST",))
+require_put = require_http_methods(("PUT",))
+require_patch = require_http_methods(("PATCH",))
+require_delete = require_http_methods(("DELETE",))

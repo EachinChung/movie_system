@@ -1,10 +1,9 @@
 from pathlib import Path
 
-import aiohttp as aiohttp
+import aiohttp
 
-from constants.requests import (
-    REQUEST_KEEPALIVE_TIMEOUT, REQUEST_LIMIT_PER_HOST
-)
+from constants.requests import REQUEST_KEEPALIVE_TIMEOUT
+from constants.requests import REQUEST_LIMIT_PER_HOST
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = '7jh#y2_sn64e#a6ka=uyw##3r&sb=_+jhd14i3x9hlf0x8ddcz'
@@ -12,6 +11,7 @@ SECRET_KEY = '7jh#y2_sn64e#a6ka=uyw##3r&sb=_+jhd14i3x9hlf0x8ddcz'
 DEBUG = True
 ALLOWED_HOSTS = ['*']
 
+# Application definition
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -70,6 +70,16 @@ DATABASES = {
         'PASSWORD': '123456',
         'PORT': 3306,
     },
+}
+
+CACHES = {
+    "default": {
+        "BACKEND": "django_redis.cache.RedisCache",
+        "LOCATION": "redis://127.0.0.1:6379/0",
+        "OPTIONS": {
+            "CLIENT_CLASS": "django_redis.client.DefaultClient",
+        }
+    }
 }
 
 # Password validation
