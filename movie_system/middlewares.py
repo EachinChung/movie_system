@@ -3,9 +3,9 @@ import logging
 from django.utils.deprecation import MiddlewareMixin
 from pydantic.error_wrappers import ValidationError
 
-from constants.error_code import Error
-from exception import ApiError
-from utils.http_response import json_response
+from movie.constants.error_code import Error
+from movie.utils.http_response import json_response
+from movie_system.exception import ApiError
 
 logger = logging.getLogger('django')
 

@@ -2,8 +2,8 @@ from pathlib import Path
 
 import aiohttp
 
-from constants.requests import REQUEST_KEEPALIVE_TIMEOUT
-from constants.requests import REQUEST_LIMIT_PER_HOST
+from movie.constants.requests import REQUEST_KEEPALIVE_TIMEOUT
+from movie.constants.requests import REQUEST_LIMIT_PER_HOST
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = '7jh#y2_sn64e#a6ka=uyw##3r&sb=_+jhd14i3x9hlf0x8ddcz'
@@ -13,6 +13,7 @@ ALLOWED_HOSTS = ['*']
 
 # Application definition
 INSTALLED_APPS = [
+    'movie.apps.MovieConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -25,7 +26,6 @@ MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',

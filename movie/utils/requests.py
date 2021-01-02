@@ -4,8 +4,7 @@ from typing import Tuple, Union
 
 from aiohttp import ClientSession, ClientTimeout
 
-from constants.error_code import Error
-from constants.requests import REQUEST_TIMEOUT
+from movie.constants import REQUEST_TIMEOUT, Error
 from movie_system.settings import http_pool
 
 logger = logging.getLogger('django')
