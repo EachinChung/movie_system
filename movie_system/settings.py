@@ -1,10 +1,5 @@
 from pathlib import Path
 
-import aiohttp
-
-from movie.constants.requests import REQUEST_KEEPALIVE_TIMEOUT
-from movie.constants.requests import REQUEST_LIMIT_PER_HOST
-
 BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = '7jh#y2_sn64e#a6ka=uyw##3r&sb=_+jhd14i3x9hlf0x8ddcz'
 
@@ -148,9 +143,3 @@ LOGGING = {
         },
     },
 }
-
-http_pool = aiohttp.TCPConnector(
-    limit_per_host=REQUEST_LIMIT_PER_HOST,
-    keepalive_timeout=REQUEST_KEEPALIVE_TIMEOUT,
-    force_close=False,
-)
