@@ -4,6 +4,7 @@ from typing import Tuple, Union
 import jwt
 
 from movie_system import settings
+from movie_system.exception import ApiError
 
 
 def create_token(sub: str, data: dict = None, exp: int = 60, secret: str = settings.SECRET_KEY) -> str:
@@ -49,3 +50,19 @@ def token_validator(token: str, secret: str = settings.SECRET_KEY) -> Tuple[bool
         return False, 'invalid token'
     else:
         return True, payload
+
+
+def get_user_id_by_token(request):
+    try:
+        token_type, token = request.META.get("HTTP_AUTHORIZATION").split(None, 1)
+    except (ValueError, AttributeError):
+        raise ApiError(code='0401', message='请重新登录')
+
+    if token == 'null' or token_type.lower() != 'bearer':
+        raise ApiError(code='0401', message='请重新登录')
+
+    result, token = token_validator(token)
+    if not result:
+        raise ApiError(code='0401', message='请重新登录')
+
+    return token['sub']
