@@ -10,7 +10,7 @@ class Sex(IntEnum):
     women = 0
 
 
-class UserBodyModel(BaseModel):
+class UserPostModel(BaseModel):
     nickname: str = Field(title="昵称")
     sex: Sex = Field(title="性别")
     email: EmailStr = Field(title="邮箱")
@@ -37,3 +37,12 @@ class UserBodyModel(BaseModel):
             return
 
         raise ValueError("value is not strong enough")
+
+
+class AuthPostModel(BaseModel):
+    email: EmailStr = Field(title="邮箱")
+    password: str = Field(title="密码")
+
+
+class AuthPutModel(BaseModel):
+    refresh_token: str = Field(title="刷新token")

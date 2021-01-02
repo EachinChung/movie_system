@@ -12,7 +12,7 @@ def create_token(sub: str, data: dict = None, exp: int = 60, secret: str = setti
     Args:
         sub (str): 签发给谁
         data (dict, optional): token内容. Defaults to None.
-        exp (int, optional): 多久过期. Defaults to 60.
+        exp (int, optional): 多久分钟后过期. Defaults to 60.
         secret (str, optional): 秘钥. Defaults to settings.SECRET_KEY.
 
     Returns:

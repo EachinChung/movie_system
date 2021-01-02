@@ -46,6 +46,14 @@ class User(models.Model):
         verbose_name = '用户'
         verbose_name_plural = '用户表'
 
+    def to_dict(self):
+        return {
+            'user_id': self.id,
+            'nickname': self.nickname,
+            'sex': self.sex,
+            'email': self.email,
+        }
+
     def delete_cache(self, *keys):
         """
         清空缓存
