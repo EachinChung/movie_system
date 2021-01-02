@@ -89,4 +89,4 @@ class User(models.Model):
         Returns:
             bool: 是否正确
         """
-        return check_password(self.password_hash, password)
+        return check_password(password, self.password_hash)

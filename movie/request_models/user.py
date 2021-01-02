@@ -4,6 +4,8 @@ from enum import IntEnum
 from pydantic import EmailStr, Field, validator
 from pydantic.main import BaseModel
 
+from movie.constants.error_text import PASSWORD_NOT_STRONG
+
 
 class Sex(IntEnum):
     man = 1
@@ -26,17 +28,20 @@ class UserPostModel(BaseModel):
 
         Raises:
             ValueError: 验证失败
-        """
-        if len(password) >= 6:
-            return
-        if re.search(r"[a-z]", password):
-            return
-        if re.search(r"[A-Z]", password):
-            return
-        if re.search(r"\d", password):
-            return
 
-        raise ValueError("value is not strong enough")
+        Returns:
+            str: password
+        """
+        if len(password) < 6:
+            raise ValueError(PASSWORD_NOT_STRONG)
+        if not re.search(r"[a-z]", password):
+            raise ValueError(PASSWORD_NOT_STRONG)
+        if not re.search(r"[A-Z]", password):
+            raise ValueError(PASSWORD_NOT_STRONG)
+        if not re.search(r"\d", password):
+            raise ValueError(PASSWORD_NOT_STRONG)
+
+        return password
 
 
 class AuthPostModel(BaseModel):
