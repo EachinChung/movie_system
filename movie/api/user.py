@@ -5,7 +5,8 @@ from django.views import View
 from movie.constants.error_code import Error
 from movie.decorators.auth import require_auth
 from movie.models.user import User
-from movie.request_models.user import UserPostModel, AuthPostModel, AuthPutModel
+from movie.request_models.user import AuthPostModel, AuthPutModel
+from movie.request_models.user import UserPostModel
 from movie.utils.http_response import json_response
 from movie.utils.token import create_token, token_validator
 

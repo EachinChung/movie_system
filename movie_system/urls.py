@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.urls import include, path
 
-from movie.api.user import UserApi, AuthApi
+from movie.api.user import AuthApi, UserApi
 
 urlpatterns = [
     path('admin/', admin.site.urls),
