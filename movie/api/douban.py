@@ -12,6 +12,7 @@ class DouBanTop250Api(AsyncApi):
 
     @require_auth_async
     async def get(self, request):
+        """ 豆瓣top250 """
         body = DouBanTop250GetModel(**request.GET.dict())
         res = await requests.get(url=TOP250, params=dict(start=(body.page - 1) * 25))
         html = etree.HTML(res)

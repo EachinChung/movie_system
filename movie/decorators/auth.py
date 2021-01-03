@@ -7,6 +7,7 @@ from movie.utils.token import get_user_id_by_token
 
 
 def require_auth(func):
+    """ 限制登录才能访问 """
     @wraps(func)
     def wrapper(api_obj, request, *args, **kw):
         user_id = get_user_id_by_token(request)
@@ -17,6 +18,7 @@ def require_auth(func):
 
 
 def require_auth_async(func):
+    """ 限制登录才能访问 """
     @wraps(func)
     async def wrapper(api_obj, request, *args, **kw):
         user_id = get_user_id_by_token(request)

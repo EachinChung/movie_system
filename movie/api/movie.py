@@ -21,6 +21,7 @@ class SearchApi(AsyncApi):
     @require_auth_async
     @call_second_limit_async(2)
     async def get(self, request):
+        """ 搜索电影 """
         body = SearchGetModel(**request.GET.dict())
         res = await requests.get(is_json=True, url=SEARCH, params=dict(q=body.q))
         return json_response(data=res)
@@ -29,6 +30,7 @@ class SearchApi(AsyncApi):
 class MovieBySearchApi(AsyncApi):
     @require_auth_async
     async def get(self, request):
+        """ 通过搜索获取电影 """
         body = MovieBySearchGetModel(**request.GET.dict())
         movie = await sync_to_async(Movie.objects.get_by_name, thread_sensitive=True)(body.name)
         if movie:
@@ -58,6 +60,7 @@ class MovieBySearchApi(AsyncApi):
 class MovieCommentApi(View):
     @require_auth
     def get(self, request, movie_id):
+        """ 获取评论 """
         body = MovieCommentGetModel(**request.GET.dict())
         offset = (body.page - 1) * body.size
         limit = body.size
@@ -66,6 +69,7 @@ class MovieCommentApi(View):
 
     @require_auth
     def post(self, request, movie_id):
+        """ 增加评论 """
         body = MovieCommentPostModel(**json.loads(request.body))
         Comment.objects.create(comment=body.comment, user_id=request.user.id, movie_id=movie_id)
         return json_response(message="评论成功")

@@ -6,6 +6,7 @@ from movie_system.exception import ApiError
 
 
 def call_second_limit_async(second):
+    """ 接口限制一段时间内只能访问一次 """
     def decorator(func):
         @wraps(func)
         async def wrapped_view(api_obj, request, *args, **kwargs):

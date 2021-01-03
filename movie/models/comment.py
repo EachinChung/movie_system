@@ -10,7 +10,17 @@ class CommentManager(BaseManager):
     def _get_cache_key(self, comment_id: int) -> str:
         return COMMENT_CACHE_KEY % comment_id
 
-    def get_by_movie_id(self, movie_id, offset, limit):
+    def get_by_movie_id(self, movie_id: int, offset: int, limit: int) -> list:
+        """通过电影id获取评论
+
+        Args:
+            movie_id (int): 电影id
+            offset (int): 跳过查询条数
+            limit (int): 查询数量
+
+        Returns:
+            list: 评论列表
+        """
         return self.filter(movie_id=movie_id)[offset: limit]
 
 
