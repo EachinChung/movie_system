@@ -1,26 +1,19 @@
-import asyncio
-
-from django.utils.decorators import classonlymethod
-from django.views import View
 from lxml import etree
 
-from movie.request_models.douban import DouBanTop250ApiGetModel
+from movie.api.async_api import AsyncApi
+from movie.constants.douban_url import TOP250
+from movie.decorators.auth import require_auth_async
+from movie.request_models.douban import DouBanTop250GetModel
 from movie.utils.http_response import json_response
 from movie.utils.requests import requests
 
 
-class DouBanTop250Api(View):
-    # noinspection PyUnresolvedReferences,PyProtectedMember
-    @classonlymethod
-    def as_view(cls, **kw):
-        _view = super().as_view(**kw)
-        _view._is_coroutine = asyncio.coroutines._is_coroutine
-        return _view
+class DouBanTop250Api(AsyncApi):
 
-    @staticmethod
-    async def get(request):
-        body = DouBanTop250ApiGetModel(**request.GET.dict())
-        html = await requests.get(url=f"https://movie.douban.com/top250?start={(body.page - 1) * 25}")
+    @require_auth_async
+    async def get(self, request):
+        body = DouBanTop250GetModel(**request.GET.dict())
+        html = await requests.get(url=TOP250, params=dict(start=(body.page - 1) * 25))
         html = etree.HTML(html)
         data = html.xpath('//ol[@class="grid_view"]/li')
         result = []

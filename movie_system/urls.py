@@ -2,6 +2,7 @@ from django.contrib import admin
 from django.urls import include, path
 
 from movie.api.douban import DouBanTop250Api
+from movie.api.movie import SearchApi
 from movie.api.user import AuthApi, UserApi
 
 urlpatterns = [
@@ -11,6 +12,9 @@ urlpatterns = [
         path('users', UserApi.as_view(), name='user'),
         path('douban/', include([
             path('top250', DouBanTop250Api.as_view(), name='dou_ban_top250'),
+        ])),
+        path('movie/', include([
+            path('search', SearchApi.as_view(), name='search'),
         ]))
     ]))
 ]
