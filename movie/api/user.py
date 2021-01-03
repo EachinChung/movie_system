@@ -24,7 +24,8 @@ class UserApi(View):
         body = UserPostModel(**json.loads(request.body))
         user = User.objects.get_by_email(body.email)
         if user:
-            return json_response(code="FFFF", message="该邮箱已创建用户")
+            code, message = Error.user_already_exists_error.unpack()
+            return json_response(code=code, message=message)
 
         user = User()
         user.nickname = body.nickname

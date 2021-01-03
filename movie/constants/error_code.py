@@ -14,3 +14,4 @@ class Error:
     request_error = ErrorNode("FFFF", "请求第三方发生内部错误")
     inter_error = ErrorNode("FFFF", "系统内部错误")
     mail_or_password_error = ErrorNode("FFFF", "邮箱或密码错误")
+    user_already_exists_error = ErrorNode("FFFF", "该邮箱已创建用户")
