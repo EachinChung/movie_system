@@ -13,9 +13,9 @@ urlpatterns = [
         path('douban/', include([
             path('top250', DouBanTop250Api.as_view(), name='dou_ban_top250'),
         ])),
-        path('movies', include([
+        path('movies/', include([
             path('', MovieBySearchApi.as_view(), name='movies'),
-            path('/search', SearchApi.as_view(), name='search'),
+            path('search', SearchApi.as_view(), name='search'),
         ]))
     ]))
 ]
