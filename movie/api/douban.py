@@ -13,8 +13,8 @@ class DouBanTop250Api(AsyncApi):
     @require_auth_async
     async def get(self, request):
         body = DouBanTop250GetModel(**request.GET.dict())
-        html = await requests.get(url=TOP250, params=dict(start=(body.page - 1) * 25))
-        html = etree.HTML(html)
+        res = await requests.get(url=TOP250, params=dict(start=(body.page - 1) * 25))
+        html = etree.HTML(res)
         data = html.xpath('//ol[@class="grid_view"]/li')
         result = []
         for datum in data:
