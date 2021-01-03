@@ -3,11 +3,15 @@ from django.db import models
 
 from movie.constants.redis_cache_key import COMMENT_CACHE_KEY
 from movie.models.base import BaseManager
+from movie.utils.tools import datetime2str
 
 
 class CommentManager(BaseManager):
     def _get_cache_key(self, comment_id: int) -> str:
         return COMMENT_CACHE_KEY % comment_id
+
+    def get_by_movie_id(self, movie_id, offset, limit):
+        return self.filter(movie_id=movie_id)[offset: limit]
 
 
 class Comment(models.Model):
@@ -29,7 +33,8 @@ class Comment(models.Model):
             'user_id': self.user_id,
             'movie_id': self.movie_id,
             'comment': self.comment,
-            'create_time': str(self.create_time)
+            'create_time': datetime2str(self.create_time),
+            'update_time': datetime2str(self.update_time),
         }
 
     def delete_cache(self, *keys):

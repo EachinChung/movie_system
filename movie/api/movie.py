@@ -2,13 +2,17 @@ import json
 
 from asgiref.sync import sync_to_async
 from bs4 import BeautifulSoup
+from django.views import View
 
 from movie.api.async_api import AsyncApi
 from movie.constants.douban_url import SEARCH
-from movie.decorators.auth import require_auth_async
+from movie.decorators.auth import require_auth, require_auth_async
 from movie.decorators.tools import call_second_limit_async
+from movie.models.comment import Comment
 from movie.models.movie import Movie
-from movie.request_models.movie import MovieBySearchGetModel, SearchGetModel
+from movie.request_models.movie import MovieBySearchGetModel
+from movie.request_models.movie import MovieCommentGetModel
+from movie.request_models.movie import MovieCommentPostModel, SearchGetModel
 from movie.utils.http_response import json_response
 from movie.utils.requests import requests
 
@@ -49,3 +53,19 @@ class MovieBySearchApi(AsyncApi):
             description=data['description'],
         )
         return json_response(data=movie.to_dict())
+
+
+class MovieCommentApi(View):
+    @require_auth
+    def get(self, request, movie_id):
+        body = MovieCommentGetModel(**request.GET.dict())
+        offset = (body.page - 1) * body.size
+        limit = body.size
+        comments = Comment.objects.get_by_movie_id(movie_id, offset, limit)
+        return json_response(data=[comment.to_dict() for comment in comments])
+
+    @require_auth
+    def post(self, request, movie_id):
+        body = MovieCommentPostModel(**json.loads(request.body))
+        Comment.objects.create(comment=body.comment, user_id=request.user.id, movie_id=movie_id)
+        return json_response(message="评论成功")
