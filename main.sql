@@ -17,16 +17,29 @@ create table user
 
 create table movie
 (
-    id            bigint primary key auto_increment,
-    name          varchar(128)                       not null,
-    image         varchar(256)                       not null,
-    director      json                               not null,
-    author        json                               not null,
-    actor         json                               not null,
+    id             bigint primary key auto_increment,
+    name           varchar(128)                       not null,
+    image          varchar(256)                       not null,
+    director       json                               not null,
+    author         json                               not null,
+    actor          json                               not null,
     date_published date                               not null,
-    description   text                               not null,
-    create_time   datetime default CURRENT_TIMESTAMP not null comment '创建时间',
-    update_time   datetime                           not null on update CURRENT_TIMESTAMP comment '更新时间',
+    description    text                               not null,
+    create_time    datetime default CURRENT_TIMESTAMP not null comment '创建时间',
+    update_time    datetime                           not null on update CURRENT_TIMESTAMP comment '更新时间',
     unique index name (name),
+    index create_time (create_time)
+);
+
+create table comment
+(
+    id          bigint primary key auto_increment,
+    comment     varchar(256)                       not null,
+    user_id     bigint                             not null,
+    movie_id    bigint                             not null,
+    create_time datetime default CURRENT_TIMESTAMP not null comment '创建时间',
+    update_time datetime                           not null on update CURRENT_TIMESTAMP comment '更新时间',
+    index user_id (user_id),
+    index movie_id (movie_id),
     index create_time (create_time)
 );

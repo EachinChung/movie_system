@@ -55,11 +55,6 @@ class User(models.Model):
         }
 
     def delete_cache(self, *keys):
-        """
-        清空缓存
-        :param keys: 自定义需要删除的key
-        :return:
-        """
         cache_keys = [
             USER_CACHE_KEY % self.id,
             USER_BY_EMAIL_CACHE_KEY % self.email,
