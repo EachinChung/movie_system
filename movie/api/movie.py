@@ -6,7 +6,7 @@ from django.views import View
 
 from movie.api.async_api import AsyncApi
 from movie.constants.douban_url import SEARCH
-from movie.decorators.auth import require_auth, require_auth_async
+from movie.decorators.auth import require_auth
 from movie.decorators.tools import call_second_limit_async
 from movie.models.comment import Comment
 from movie.models.movie import Movie
@@ -18,7 +18,6 @@ from movie.utils.requests import requests
 
 
 class SearchApi(AsyncApi):
-    @require_auth_async
     @call_second_limit_async(2)
     async def get(self, request):
         """ 搜索电影 """
@@ -28,8 +27,8 @@ class SearchApi(AsyncApi):
 
 
 class MovieBySearchApi(AsyncApi):
-    @require_auth_async
-    async def get(self, request):
+    @staticmethod
+    async def get(request):
         """ 通过搜索获取电影 """
         body = MovieBySearchGetModel(**request.GET.dict())
         movie = await sync_to_async(Movie.objects.get_by_name, thread_sensitive=True)(body.name)
@@ -58,8 +57,9 @@ class MovieBySearchApi(AsyncApi):
 
 
 class MovieCommentApi(View):
-    @require_auth
-    def get(self, request, movie_id):
+
+    @staticmethod
+    def get(request, movie_id):
         """ 获取评论 """
         body = MovieCommentGetModel(**request.GET.dict())
         offset = (body.page - 1) * body.size
