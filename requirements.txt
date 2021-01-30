@@ -2,13 +2,12 @@ aiohttp==3.7.3
 autopep8==1.5.4
 beautifulsoup4==4.9.3
 Django==3.1.4
-django-conn-pool==2.1.0
 django-cors-headers==3.6.0
 django-redis==4.12.1
 email-validator==1.1.2
 flake8==3.8.4
 lxml==4.6.2
-mysqlclient==2.0.3
+mysql-connector-python==8.0.23
 pydantic==1.7.3
 PyJWT==2.0.0
 redis==3.5.3

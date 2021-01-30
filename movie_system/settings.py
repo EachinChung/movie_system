@@ -66,16 +66,10 @@ WSGI_APPLICATION = 'movie_system.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
-SQLALCHEMY_QUEUEPOOL = {
-    'pool_size': 10,
-    'max_overflow': 10,
-    'timeout': 5,
-    'recycle': 119,
-}
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django_conn_pool.mysql',
+        'ENGINE': 'mysql.connector.django',
         'HOST': '127.0.0.1',
         'NAME': 'movie_system',
         'USER': 'root',
