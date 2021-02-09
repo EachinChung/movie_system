@@ -22,6 +22,19 @@ class MovieManager(BaseManager):
         model = self.filter(name__icontains=name).first()
         return model
 
+    def get_by_name_all(self, name: str):
+        """通过电影名查询
+
+        Args:
+            name (str): 电影名
+
+        Returns:
+            models.Model: 数据的映射关系
+        """
+
+        model = self.filter(name__icontains=name).all()
+        return model
+
 
 class Movie(models.Model):
     objects = MovieManager()
@@ -41,17 +54,26 @@ class Movie(models.Model):
         verbose_name = '电影'
         verbose_name_plural = '电影表'
 
-    def to_dict(self):
-        return {
-            'movie_id': self.id,
-            'name': self.name,
-            'image': self.image,
-            'director': self.director,
-            'author': self.author,
-            'actor': self.actor,
-            'datePublished': self.date_published,
-            'description': self.description,
-        }
+    def to_dict(self, level="default"):
+        if level == "search":
+            dict_data = {
+                'movie_id': self.id,
+                'url': self.douban_url,
+                'title': self.name,
+                'type': "movie",
+            }
+        else:
+            dict_data = {
+                'movie_id': self.id,
+                'name': self.name,
+                'image': self.image,
+                'director': self.director,
+                'author': self.author,
+                'actor': self.actor,
+                'datePublished': self.date_published,
+                'description': self.description,
+            }
+        return dict_data
 
     def delete_cache(self, *keys):
         cache_keys = [

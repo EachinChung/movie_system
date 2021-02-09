@@ -33,4 +33,4 @@ class MovieCommentGetModel(BaseModel):
 
 
 class MovieCommentPostModel(BaseModel):
-    comment: str = Field(title="评论", max_length=256)
+    comment: str = Field(title="评论", max_length=256, min_length=1)
