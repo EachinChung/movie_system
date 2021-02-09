@@ -1,5 +1,6 @@
-import json
+from html import unescape
 
+import ujson as json
 from asgiref.sync import sync_to_async
 from bs4 import BeautifulSoup
 from django.views import View
@@ -21,9 +22,64 @@ class SearchApi(AsyncApi):
     @call_second_limit_async(2)
     async def get(self, request):
         """ 搜索电影 """
-        body = SearchGetModel(**request.GET.dict())
-        res = await requests.get(is_json=True, url=SEARCH, params=dict(q=body.q))
-        return json_response(data=res)
+        # body = SearchGetModel(**request.GET.dict())
+        # res = await requests.get(is_json=True, url=SEARCH, params=dict(q=body.q))
+        return json_response(data=[
+            {
+                "episode": "",
+                "img": "https://img2.doubanio.com/view/photo/s_ratio_poster/public/p2173577632.jpg",
+                "title": "十二怒汉",
+                "url": "https://movie.douban.com/subject/1293182/?suggest=%E5%8D%81",
+                "type": "movie",
+                "year": "1957",
+                "sub_title": "12 Angry Men",
+                "id": "1293182"
+            },
+            {
+                "episode": "",
+                "img": "https://img9.doubanio.com/view/photo/s_ratio_poster/public/p2242220716.jpg",
+                "title": "十二公民",
+                "url": "https://movie.douban.com/subject/24875534/?suggest=%E5%8D%81",
+                "type": "movie",
+                "year": "2014",
+                "sub_title": "十二公民",
+                "id": "24875534"
+            },
+            {
+                "episode": "",
+                "img": "https://img3.doubanio.com/view/photo/s_ratio_poster/public/p627041570.jpg",
+                "title": "十二猴子",
+                "url": "https://movie.douban.com/subject/1298744/?suggest=%E5%8D%81",
+                "type": "movie",
+                "year": "1995",
+                "sub_title": "Twelve Monkeys",
+                "id": "1298744"
+            },
+            {
+                "img": "https://img2.doubanio.com/view/celebrity/s_ratio_celebrity/public/p1502801739.83.jpg",
+                "title": "十一月",
+                "url": "https://movie.douban.com/celebrity/1378421/?suggest=%E5%8D%81",
+                "sub_title": "Shiyiyue",
+                "type": "celebrity",
+                "id": "1378421"
+            },
+            {
+                "img": "https://img1.doubanio.com/f/movie/ca527386eb8c4e325611e22dfcb04cc116d6b423/pics/movie/celebrity-default-small.png",
+                "title": "十枝梨菜",
+                "url": "https://movie.douban.com/celebrity/1358996/?suggest=%E5%8D%81",
+                "sub_title": "Rina Toeda",
+                "type": "celebrity",
+                "id": "1358996"
+            },
+            {
+                "img": "https://img2.doubanio.com/view/celebrity/s_ratio_celebrity/public/p10113.jpg",
+                "title": "十朱幸代",
+                "url": "https://movie.douban.com/celebrity/1038633/?suggest=%E5%8D%81",
+                "sub_title": "Yukiyo Toake",
+                "type": "celebrity",
+                "id": "1038633"
+            }
+        ])
 
 
 class MovieBySearchApi(AsyncApi):
@@ -35,23 +91,25 @@ class MovieBySearchApi(AsyncApi):
         if movie:
             return json_response(data=movie.to_dict())
 
-        headers = {
-            'Host': 'movie.douban.com',
-            'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 11_1_0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36'
-        }
-        res = await requests.get(url=body.douban_url, headers=headers)
+        res = await requests.get(url=body.douban_url)
         soup = BeautifulSoup(res, "html.parser")
         soup_data = soup.select('script[type="application/ld+json"]')
+        description = soup.select('span[property="v:summary"]')
+        description_tag = list(description)[0]
+        description_text = str(description_tag.text).replace(" ", "")
+        description_text = description_text.replace("\n", "")
+        description_list = description_text.split("　　")
         data = list(soup_data)[0]
         data = json.loads(data.string)
         movie = await sync_to_async(Movie.objects.create, thread_sensitive=True)(
-            name=data['name'],
-            image=data['image'],
-            director=[item['name'] for item in data['director']],
-            author=[item['name'] for item in data['author']],
-            actor=[item['name'] for item in data['actor']],
-            date_published=data['datePublished'],
-            description=data['description'],
+            name=unescape(data['name']),
+            image=unescape(data['image']),
+            director=[unescape(item['name']) for item in data['director']],
+            author=[unescape(item['name']) for item in data['author']],
+            actor=[unescape(item['name']) for item in data['actor']],
+            date_published=unescape(data['datePublished']),
+            douban_url=body.douban_url,
+            description=description_list,
         )
         return json_response(data=movie.to_dict())
 

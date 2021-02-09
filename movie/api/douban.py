@@ -1,4 +1,5 @@
-# noinspection PyUnresolvedReferences
+import ujson as json
+from django.core.cache import cache
 from lxml import etree
 
 from movie.api.async_api import AsyncApi
@@ -14,10 +15,22 @@ class DouBanTop250Api(AsyncApi):
     async def get(request):
         """ 豆瓣top250 """
         body = DouBanTop250GetModel(**request.GET.dict())
+        cakey = f"DouBan:Top250:{body.page}"
+        result = cache.get(cakey)
+        if result:
+            return json_response(data=json.loads(result))
+
+        data = await DouBanTop250Api.get_douban_top_250(body)
+        cache.set(cakey, json.dumps(data), timeout=3600)
+        return json_response(data=data)
+
+    # noinspection SpellCheckingInspection
+    @staticmethod
+    async def get_douban_top_250(body):
         res = await requests.get(url=TOP250, params=dict(start=(body.page - 1) * 25))
         html = etree.HTML(res)
         data = html.xpath('//ol[@class="grid_view"]/li')
-        result = []
+        movie_list = []
         for datum in data:
             url = datum.xpath('div/div[2]/div[@class="hd"]/a/@href')
             title = datum.xpath('div/div[2]/div[@class="hd"]/a/span[1]/text()')
@@ -29,7 +42,7 @@ class DouBanTop250Api(AsyncApi):
             info[0] = info[0].replace("\n                            ", "")
             info[1] = info[1].replace("\n                            ", "")
             info[1] = info[1].replace("\n                        ", "")
-            result.append(
+            movie_list.append(
                 {
                     'url': url[0],
                     'title': title[0],
@@ -41,4 +54,4 @@ class DouBanTop250Api(AsyncApi):
                 }
             )
 
-        return json_response(data=dict(top250=result, page=body.page, size=25, total=250))
+        return {'top250': movie_list, 'page': body.page, 'size': 25, 'total': 250}

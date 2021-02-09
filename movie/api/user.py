@@ -1,5 +1,4 @@
-import json
-
+import ujson as json
 from django.views import View
 
 from movie.constants.error_code import Error

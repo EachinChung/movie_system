@@ -31,7 +31,8 @@ class Movie(models.Model):
     author = models.JSONField('编剧')
     actor = models.JSONField('演员')
     date_published = models.DateField('上映时间')
-    description = models.TextField('介绍')
+    description = models.JSONField('介绍')
+    douban_url = models.TextField('豆瓣地址')
     create_time = models.DateTimeField('创建时间', auto_now_add=True)
     update_time = models.DateTimeField('更新时间', auto_now=True)
 

@@ -3,6 +3,7 @@ import logging
 from typing import Tuple, Union
 
 from aiohttp import ClientSession
+from fake_useragent import UserAgent
 
 from movie.constants.error_code import Error
 from movie.constants.muster import Method
@@ -25,7 +26,11 @@ class RequestsTool:
         """
         try:
             async with ClientSession() as session:
-                async with getattr(session, method)(*args, **kwargs) as response:
+                headers = {
+                    'Host': 'movie.douban.com',
+                    'User-Agent': UserAgent().random
+                }
+                async with getattr(session, method)(headers=headers, *args, **kwargs) as response:
                     if response.status == 200:
                         return await response.json() if is_json else await response.text()
                     else:
